@@ -7,10 +7,8 @@ const WalletConnector = () => {
   const [telegramWallet, setTelegramWallet] = useState(null);
 
   useEffect(() => {
-    console.log("WalletConnector mounted");
     // Check if we're in Telegram Web App
     if (window.Telegram && window.Telegram.WebApp) {
-      console.log("Detected Telegram Web App");
       setIsTelegram(true);
       const tg = window.Telegram.WebApp;
 
@@ -18,8 +16,6 @@ const WalletConnector = () => {
       if (tg.MainButton && tg.initDataUnsafe?.user) {
         setTelegramWallet(tg);
       }
-    } else {
-      console.log("Detected web browser");
     }
   }, []);
 
@@ -82,24 +78,11 @@ const WalletConnector = () => {
       : address;
   };
 
-  console.log(
-    "WalletConnector render - isTelegram:",
-    isTelegram,
-    "isConnected:",
-    isConnected
-  );
-
-  return (
-    <div
-      className="wallet-connector"
-      style={{ border: "2px solid red", padding: "10px" }}
-    >
-      <div style={{ color: "red", fontSize: "12px", marginBottom: "5px" }}>
-        DEBUG: WalletConnector is rendering
-      </div>
-      {isTelegram ? (
-        // Telegram Web App - use Telegram wallet
-        !isConnected ? (
+  if (isTelegram) {
+    // Telegram Web App - use Telegram wallet
+    return (
+      <div className="wallet-connector">
+        {!isConnected ? (
           <button
             className="telegram-wallet-button"
             onClick={connectTelegramWallet}
@@ -115,27 +98,33 @@ const WalletConnector = () => {
               Disconnect
             </button>
           </div>
-        )
-      ) : // Web browser - use Phantom wallet
-      !isConnected ? (
-        <button
-          className="phantom-wallet-button"
-          onClick={connectPhantomWallet}
-        >
-          Connect Phantom Wallet
-        </button>
-      ) : (
-        <div className="wallet-info">
-          <span className="wallet-address">
-            {getShortAddress(walletAddress)}
-          </span>
-          <button className="disconnect-button" onClick={disconnectWallet}>
-            Disconnect
+        )}
+      </div>
+    );
+  } else {
+    // Web browser - use Phantom wallet
+    return (
+      <div className="wallet-connector">
+        {!isConnected ? (
+          <button
+            className="phantom-wallet-button"
+            onClick={connectPhantomWallet}
+          >
+            Connect Phantom Wallet
           </button>
-        </div>
-      )}
-    </div>
-  );
+        ) : (
+          <div className="wallet-info">
+            <span className="wallet-address">
+              {getShortAddress(walletAddress)}
+            </span>
+            <button className="disconnect-button" onClick={disconnectWallet}>
+              Disconnect
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
 };
 
 export default WalletConnector;
