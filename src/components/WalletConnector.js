@@ -35,6 +35,7 @@ const WalletConnector = () => {
 
     // Listen for wallet connection changes
     connector.onStatusChange((wallet) => {
+      console.log("TON wallet status changed:", wallet);
       if (wallet) {
         console.log("TON wallet connected:", wallet);
         setWalletAddress(wallet.account.address);
@@ -46,13 +47,7 @@ const WalletConnector = () => {
       }
     });
 
-    // Check if already connected
-    connector.getWallet().then((wallet) => {
-      if (wallet) {
-        setWalletAddress(wallet.account.address);
-        setIsConnected(true);
-      }
-    });
+    console.log("TON Connect initialized");
   }, []);
 
   const connectPhantomWallet = async () => {
@@ -97,6 +92,8 @@ const WalletConnector = () => {
         console.error("TON wallet connection failed:", error);
         alert("Failed to connect to TON wallet. Please try again.");
       }
+    } else {
+      console.error("TON connector not initialized");
     }
   };
 
