@@ -11,6 +11,28 @@ function App() {
   // Audio files for zapp sounds
   const zappSounds = ["/sfx/zapp1.mp3", "/sfx/zapp2.mp3", "/sfx/zapp3.mp3"];
 
+  // Preload critical images
+  useEffect(() => {
+    // Preload logo and grass tile
+    const preloadImages = [
+      "/images/ponzimonlogo.png",
+      "/images/tile_grass.png",
+      "/images/background.png",
+    ];
+
+    preloadImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Preload first few Ponzimon cards for faster initial load
+    const preloadCards = ponzimonCards.slice(0, 10);
+    preloadCards.forEach((card) => {
+      const img = new Image();
+      img.src = `/images/cards/${card}`;
+    });
+  }, []);
+
   useEffect(() => {
     // Initialize Telegram Web App
     if (window.Telegram && window.Telegram.WebApp) {
@@ -78,11 +100,16 @@ function App() {
   const handleBuzz = () => {
     setBuzzCount((prevCount) => prevCount + 1);
 
-    // Start shake animation
-    setIsShaking(true);
+    // Reset animation state first
+    setIsShaking(false);
+    setIsFlashing(false);
 
-    // Start flash animation
-    setIsFlashing(true);
+    // Small delay to ensure state reset
+    setTimeout(() => {
+      // Start animations
+      setIsShaking(true);
+      setIsFlashing(true);
+    }, 10);
 
     // Play random zapp sound
     playRandomZapp();
@@ -152,7 +179,7 @@ function App() {
               <img
                 src={`/images/cards/${currentCard}`}
                 alt="Ponzimon Card"
-                className={`creature-image ${isShaking ? "shake" : ""}`}
+                className={`creature-image ${isShaking ? "jump" : ""}`}
               />
             </div>
             <div className="card-name">{formatCardName(currentCard)}</div>
