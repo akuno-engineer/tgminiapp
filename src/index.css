@@ -297,17 +297,22 @@ body {
   align-items: center;
   gap: 10px;
   background: rgba(255, 255, 255, 0.95);
-  padding: 8px 12px;
+  padding: 10px 15px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .wallet-address {
   font-size: 12px;
   font-weight: 600;
-  color: var(--tg-theme-text-color, #000000);
+  color: #333333;
   font-family: "Courier New", monospace;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
 }
 
 .disconnect-button {
