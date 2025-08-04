@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { TonConnect } from "@tonconnect/sdk";
 
 const WalletConnector = () => {
   const [isTelegram, setIsTelegram] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [telegramWallet, setTelegramWallet] = useState(null);
+  const [tonConnector, setTonConnector] = useState(null);
 
   useEffect(() => {
+    // Initialize TON Connect
+    const connector = new TonConnect({
+      manifestUrl: `${window.location.origin}/tonconnect-manifest.json`,
+    });
+    setTonConnector(connector);
+
     // Check if we're in Telegram Web App
     if (window.Telegram && window.Telegram.WebApp) {
       const tg = window.Telegram.WebApp;
@@ -24,6 +32,27 @@ const WalletConnector = () => {
       console.log("Detected web browser (no Telegram object)");
       setIsTelegram(false);
     }
+
+    // Listen for wallet connection changes
+    connector.onStatusChange((wallet) => {
+      if (wallet) {
+        console.log("TON wallet connected:", wallet);
+        setWalletAddress(wallet.account.address);
+        setIsConnected(true);
+      } else {
+        console.log("TON wallet disconnected");
+        setWalletAddress("");
+        setIsConnected(false);
+      }
+    });
+
+    // Check if already connected
+    connector.getWallet().then((wallet) => {
+      if (wallet) {
+        setWalletAddress(wallet.account.address);
+        setIsConnected(true);
+      }
+    });
   }, []);
 
   const connectPhantomWallet = async () => {
@@ -59,18 +88,26 @@ const WalletConnector = () => {
     }
   };
 
+  const connectTONWallet = async () => {
+    if (tonConnector) {
+      try {
+        console.log("Connecting to TON wallet...");
+        await tonConnector.connect();
+      } catch (error) {
+        console.error("TON wallet connection failed:", error);
+        alert("Failed to connect to TON wallet. Please try again.");
+      }
+    }
+  };
+
   const connectTelegramWallet = async () => {
     if (telegramWallet) {
       try {
         // Request wallet access in Telegram
-        telegramWallet.showAlert("Connecting to Telegram wallet...");
+        telegramWallet.showAlert("Connecting to TON wallet...");
 
-        // Simulate wallet connection (replace with actual Telegram wallet API)
-        const mockAddress = "telegram-wallet-" + Date.now();
-        setWalletAddress(mockAddress);
-        setIsConnected(true);
-
-        console.log("Telegram wallet connected:", mockAddress);
+        // Use TON Connect for Telegram too
+        await connectTONWallet();
       } catch (error) {
         console.error("Telegram wallet connection failed:", error);
         telegramWallet.showAlert("Failed to connect wallet");
@@ -85,20 +122,33 @@ const WalletConnector = () => {
       window.solana.disconnect();
     }
 
+    if (tonConnector) {
+      tonConnector.disconnect();
+    }
+
     setWalletAddress("");
     setIsConnected(false);
   };
 
   const getShortAddress = (address) => {
     if (!address) return "";
-    return address.length > 10
-      ? `${address.slice(0, 6)}...${address.slice(-4)}`
-      : address;
+
+    // Handle TON addresses (48 chars starting with EQ)
+    if (address.startsWith("EQ") && address.length === 48) {
+      return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    }
+
+    // Handle Solana addresses (44 chars)
+    if (address.length > 10) {
+      return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    }
+
+    return address;
   };
 
   if (isTelegram) {
-    // Telegram Web App - use Telegram wallet
-    console.log("Rendering Telegram wallet button");
+    // Telegram Web App - use TON wallet
+    console.log("Rendering TON wallet button for Telegram");
     return (
       <div className="wallet-connector">
         {!isConnected ? (
@@ -106,7 +156,7 @@ const WalletConnector = () => {
             className="telegram-wallet-button"
             onClick={connectTelegramWallet}
           >
-            Connect Telegram Wallet
+            Connect TON Wallet
           </button>
         ) : (
           <div className="wallet-info">
