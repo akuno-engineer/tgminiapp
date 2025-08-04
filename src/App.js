@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ponzimonCards } from "./cardData";
+import WalletConnector from "./components/WalletConnector";
 
 function App() {
   const [buzzCount, setBuzzCount] = useState(0);
@@ -135,6 +136,10 @@ function App() {
 
   return (
     <div className="App">
+      <div className="wallet-section">
+        <WalletConnector />
+      </div>
+
       <div className="logo-container">
         <img
           src="/images/ponzimonlogo.png"
