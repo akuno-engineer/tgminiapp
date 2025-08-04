@@ -1,13 +1,17 @@
-# Telegram Mini App - Counter
+# Telegram Mini App - Ponzimon Buzzer
 
-A simple counter Mini App for Telegram built with React JS.
+A fun Ponzimon-themed Mini App for Telegram built with React JS. Buzz to shake Ponzimon cards and discover new creatures!
 
 ## Features
 
-- Simple counter that increments by +1
-- "Pop" button with haptic feedback
-- Telegram theme integration
-- Responsive design
+- **Ponzimon Logo** - Beautiful branding with the official logo
+- **Card Collection** - Display random Ponzimon cards from a collection of 100+ creatures
+- **BUZZ Button** - Tap to shake the current card and get a new random Ponzimon
+- **Shake Animation** - Smooth shake effect when buzzing
+- **Counter Tracking** - "Buzzed X times" counter to track your interactions
+- **Haptic Feedback** - Tactile feedback on mobile devices
+- **Telegram Theme Integration** - Automatically adapts to light/dark themes
+- **Responsive Design** - Works perfectly on all devices
 
 ## Setup Instructions
 
@@ -47,9 +51,9 @@ This creates a `build` folder with the production-ready files.
 1. Send `/newapp` to BotFather
 2. Select your bot
 3. Choose "Custom App"
-4. Enter app title: "Counter Mini App"
-5. Enter app short name: "counter"
-6. Enter app description: "A simple counter app"
+4. Enter app title: "Ponzimon Buzzer"
+5. Enter app short name: "ponzimon-buzzer"
+6. Enter app description: "Buzz to discover Ponzimon cards!"
 7. Upload an app icon (512x512 PNG)
 8. Enter the URL where your app will be hosted
 
@@ -91,14 +95,25 @@ You can deploy to any static hosting service:
 1. Send `/setmenubutton` to BotFather
 2. Select your bot
 3. Enter the URL of your deployed app
-4. Enter button text: "Open Counter App"
+4. Enter button text: "Open Ponzimon Buzzer"
 
 ## Testing Your Mini App
 
 1. Find your bot on Telegram
 2. Click the menu button or send `/start`
-3. Click "Open Counter App"
-4. Test the counter functionality
+3. Click "Open Ponzimon Buzzer"
+4. Tap BUZZ to shake cards and discover Ponzimon!
+
+## How It Works
+
+- **Initial Load**: Shows a random Ponzimon card from the collection
+- **BUZZ Action**:
+  - Increments the "Buzzed X times" counter
+  - Triggers a shake animation on the current card
+  - Changes to a new random Ponzimon card
+  - Provides haptic feedback on mobile devices
+- **Card Collection**: Features 100+ unique Ponzimon creatures
+- **Responsive Design**: Optimized for all screen sizes
 
 ## Development Tips
 
@@ -106,16 +121,20 @@ You can deploy to any static hosting service:
 - The app automatically adapts to Telegram's theme
 - Test on both light and dark themes
 - Use haptic feedback for better UX
+- Cards are stored in `/public/images/cards/` directory
 
 ## File Structure
 
 ```
 ├── public/
-│   └── index.html          # Main HTML file with Telegram script
+│   ├── index.html          # Main HTML file with Telegram script
+│   └── images/
+│       ├── ponzimonlogo.png    # App logo
+│       └── cards/              # 100+ Ponzimon card images
 ├── src/
-│   ├── App.js             # Main React component
+│   ├── App.js             # Main React component with card logic
 │   ├── index.js           # React entry point
-│   └── index.css          # Styles with Telegram theme support
+│   └── index.css          # Styles with animations and responsive design
 ├── package.json           # Dependencies and scripts
 └── README.md             # This file
 ```
@@ -126,3 +145,4 @@ You can deploy to any static hosting service:
 - Check that the Telegram Web App script is loaded
 - Verify your bot token and app configuration
 - Test on both mobile and desktop Telegram clients
+- Ensure all card images are properly loaded from `/public/images/cards/`
